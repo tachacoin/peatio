@@ -83,19 +83,19 @@ describe Account do
     end
   end
 
-  describe '.enabled' do
+  describe '.visible' do
     before do
       create_account(:usd)
       create_account(:btc)
-      create_account(:dash)
+      create_account(:eth)
     end
 
-    it 'returns the accounts with currency enabled' do
-      currency = Currency.find(:dash)
+    it 'returns the accounts with currency visible' do
+      currency = Currency.find(:eth)
       currency.transaction do
-        currency.update_columns(enabled: false)
-        expect(Account.enabled.count).to eq 24
-        currency.update_columns(enabled: true)
+        # We have created 3 members so each of them has account for each currency.
+        expect{ currency.update_columns(visible: false) }.to change { Account.visible.count }.by(-3)
+        currency.update_columns(visible: true)
       end
     end
   end
